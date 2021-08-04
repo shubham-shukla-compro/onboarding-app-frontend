@@ -1,0 +1,27 @@
+:root {
+  --theme-color: #6c59b7;
+  --grey-color: #e0e0e0;
+  --dark-grey-color: #626262;
+  --white-color: #fff;
+  font-family: 'Roboto', sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: var(--white-color);
+}
+
+body {
+  margin: 0;
+}
+
+input {
+  border: 1px solid #8e8e8e;
+  margin: 15px 0;
+}
+
+button {
+  background-color: var(--theme-color);
+  color: var(--white-color);
+  font-weight: 600;
+}
