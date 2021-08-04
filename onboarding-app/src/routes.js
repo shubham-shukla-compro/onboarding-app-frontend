@@ -5,5 +5,6 @@ import About from './components/About';
 export default [
   { path: '/', component: Dashboard },
   { path: '/add-task', component: AddTask },
+  { path: '/edit-task/:id', component: AddTask },
   { path: '/about', component: About },
 ];

@@ -1,6 +1,6 @@
 <template>
   <div class="add-task-form">
-    <h3 class="add-task-form-title">Add a New Task</h3>
+    <h3 class="add-task-form-title">{{ formTitle }}</h3>
     <form>
       <label for="modules">Module</label>
       <input
@@ -41,45 +41,89 @@ export default {
   data() {
     return {
       taskDetail: {
+        id: 0,
         module: '',
         contents: '',
         duration: '',
+        finished: false,
       },
-
       taskData: [],
       submitted: false,
       blank: false,
+      formTitle: 'Add a New Task',
     };
   },
   methods: {
     onSave() {
       const taskFields = this.taskDetail;
       if (
-        taskFields.module == '' ||
-        taskFields.contents == '' ||
-        taskFields.duration == ''
+        taskFields.module === '' ||
+        taskFields.contents === '' ||
+        taskFields.duration === ''
       ) {
         this.submitted = false;
         this.blank = true;
         return;
       }
-
       this.taskData = [...this.taskData, this.taskDetail];
-      // console.log('clicked');
       let localData = JSON.parse(localStorage.getItem('task-data'));
       if (localData) {
-        localData = [...localData, this.taskDetail];
+        if (this.$route.path.includes('/edit-task')) {
+          const index = Number(this.$route.params.id);
+          localData = localData.map((ldata) => {
+            if (ldata.id === index) {
+              ldata = this.taskDetail;
+            }
+            return ldata;
+          });
+        } else {
+          this.taskDetail.id = Math.floor(Math.random() * 10000);
+          localData = [...localData, this.taskDetail];
+        }
         localStorage.setItem('task-data', JSON.stringify(localData));
       } else {
         localStorage.setItem('task-data', JSON.stringify(this.taskData));
       }
       this.blank = false;
       this.submitted = true;
+      this.taskDetail.module = '';
+      this.taskDetail.contents = '';
+      this.taskDetail.duration = '';
 
       setTimeout(() => {
         this.$router.push('/');
       }, 3000);
     },
+    setEditFields(id) {
+      const localData = JSON.parse(localStorage.getItem('task-data'));
+      localData.map((ldata) => {
+        if (ldata.id === Number(id)) {
+          this.taskDetail = ldata;
+        }
+        return this.taskDetail;
+      });
+    },
+  },
+
+  watch: {
+    $route(to, from) {
+      if (to.path === '/add-task') {
+        this.formTitle = 'Add a New Task';
+        this.taskDetail.module = '';
+        this.taskDetail.contents = '';
+        this.taskDetail.duration = '';
+      } else if (from.path === '/add-task') {
+        this.formTitle = 'Edit Task';
+      }
+    },
+  },
+
+  created() {
+    const path = this.$route.path;
+    if (path.includes('/edit-task')) {
+      this.formTitle = 'Edit Task';
+      this.setEditFields(this.$route.params.id);
+    }
   },
 };
 </script>

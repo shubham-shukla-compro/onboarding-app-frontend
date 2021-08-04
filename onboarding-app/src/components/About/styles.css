@@ -1,0 +1,14 @@
+.about-section {
+  margin: 2rem auto;
+  max-width: 800px;
+  font-size: 1.2rem;
+}
+
+.about-section .title {
+  text-align: center;
+}
+
+.about-section .footer {
+  margin-top: 2rem;
+  text-align: center;
+}
