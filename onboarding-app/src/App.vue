@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app">
     <Header></Header>
     <router-view></router-view>
   </div>
@@ -12,10 +12,6 @@ export default {
 
   data() {
     return {};
-  },
-
-  provide: {
-    user: 'John',
   },
 };
 </script>

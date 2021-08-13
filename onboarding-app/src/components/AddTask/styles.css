@@ -38,8 +38,15 @@
   font-size: 1.2rem;
 }
 
-.add-task-btn:hover {
+.add-task-btn:hover,
+.back-btn:hover {
   background-color: #463a79;
+}
+
+button[disabled] {
+  pointer-events: none;
+  background-color: var(--grey-color);
+  color: var(--dark-grey-color);
 }
 
 .add-task-form-title {
@@ -54,4 +61,22 @@
 .text-blank {
   text-align: center;
   color: red;
+}
+
+.back-btn {
+  background-color: var(--theme-color);
+  width: 10%;
+  display: block;
+  padding: 12px 10px;
+  margin: 20px 200px;
+  cursor: pointer;
+  border: none;
+  border-radius: 25px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.back-btn i {
+  float: left;
 }

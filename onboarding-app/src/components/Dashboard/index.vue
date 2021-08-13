@@ -19,11 +19,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="(task, index) in tasksData"
-            :key="index"
-            :class="{ disabledStyle: task.finished }"
-          >
+          <tr v-for="task in tasksData" :key="task.id" v-show="!task.finished">
             <td>
               <input
                 type="checkbox"
@@ -47,6 +43,7 @@
               </button>
             </td>
           </tr>
+          <!-- completed -->
           <tr v-show="checkedTasks.length">
             <th colspan="5">Completed Tasks</th>
           </tr>
@@ -128,6 +125,8 @@ export default {
             });
           }
         }
+        // console.log(res.data);
+        return this.tasksData;
       } catch (err) {
         console.error(err.message);
       }

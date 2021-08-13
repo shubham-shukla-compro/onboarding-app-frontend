@@ -1,38 +1,50 @@
 <template>
-  <div class="add-task-form">
-    <h3 class="add-task-form-title">{{ formTitle }}</h3>
-    <form>
-      <label for="modules">Module</label>
-      <input
-        type="text"
-        id="modules"
-        class="add-task-input"
-        v-model="taskDetail.module"
-        placeholder="Enter module name..."
-        required
-      />
-      <label for="contents">Contents</label>
-      <textarea
-        id="contents"
-        class="add-task-input"
-        cols="30"
-        rows="10"
-        placeholder="Enter Contents..."
-        v-model="taskDetail.contents"
-      ></textarea>
-      <label for="duration">Duration(in days)</label>
-      <input
-        type="number"
-        id="duration"
-        class="add-task-input"
-        v-model="taskDetail.duration"
-        placeholder="Enter Duration..."
-        required
-      />
-      <button class="add-task-btn" @click.prevent="onSave()">SAVE</button>
-      <p v-show="submitted" class="text-save">Task is saved!</p>
-      <p v-show="blank" class="text-blank">Please fill all the fields!</p>
-    </form>
+  <div>
+    <router-link to="/" class="back-btn">
+      <i class="fas fa-arrow-left"></i>
+      Dashboard
+    </router-link>
+    <div class="add-task-form">
+      <h3 class="add-task-form-title">{{ formTitle }}</h3>
+      <form>
+        <label for="modules">Module</label>
+        <input
+          type="text"
+          id="modules"
+          class="add-task-input"
+          v-model="taskDetail.module"
+          placeholder="Enter module name..."
+          required
+        />
+        <label for="contents">Contents</label>
+        <textarea
+          id="contents"
+          class="add-task-input"
+          cols="30"
+          rows="10"
+          placeholder="Enter Contents..."
+          v-model="taskDetail.contents"
+        ></textarea>
+        <label for="duration">Duration(in days)</label>
+        <input
+          type="number"
+          id="duration"
+          class="add-task-input"
+          v-model="taskDetail.duration"
+          placeholder="Enter Duration..."
+          required
+        />
+        <button
+          class="add-task-btn"
+          @click.prevent="onSave()"
+          :disabled="submitted"
+        >
+          SAVE
+        </button>
+        <p v-show="submitted" class="text-save">Task is saved!</p>
+        <p v-show="blank" class="text-blank">Please fill all the fields!</p>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -111,13 +123,9 @@ export default {
     formReset() {
       this.blank = false;
       this.submitted = true;
-      this.taskDetail.module = '';
-      this.taskDetail.contents = '';
-      this.taskDetail.duration = '';
-
       setTimeout(() => {
-        this.$router.push('/');
-      }, 3000);
+        this.submitted = false;
+      }, 4000);
     },
     async updateData(id, formData) {
       try {

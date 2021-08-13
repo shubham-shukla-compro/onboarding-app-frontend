@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Dashboard.vue #test snapshot 1`] = `
+<div class="all-tasks-container" msg="OnBoarding Tasks">
+  <h1 class="title">OnBoarding Tasks</h1>
+  <div class="all-tasks-section">
+    <router-link-stub to="/add-task"><button class="all-tasks-section-btn"><i class="fas fa-plus"></i>
+        Add Task
+      </button></router-link-stub>
+    <table border="1" class="all-tasks-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Module</th>
+          <th>Contents</th>
+          <th>Duration (in days)</th>
+          <th>Edit/Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="display: none;">
+          <th colspan="5">Completed Tasks</th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
