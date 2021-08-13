@@ -37,15 +37,14 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   data() {
     return {
       taskDetail: {
-        id: 0,
         module: '',
         contents: '',
         duration: '',
-        finished: false,
       },
       taskData: [],
       submitted: false,
@@ -65,25 +64,51 @@ export default {
         this.blank = true;
         return;
       }
-      this.taskData = [...this.taskData, this.taskDetail];
-      let localData = JSON.parse(localStorage.getItem('task-data'));
-      if (localData) {
-        if (this.$route.path.includes('/edit-task')) {
-          const index = Number(this.$route.params.id);
-          localData = localData.map((ldata) => {
-            if (ldata.id === index) {
-              ldata = this.taskDetail;
-            }
-            return ldata;
-          });
-        } else {
-          this.taskDetail.id = Math.floor(Math.random() * 10000);
-          localData = [...localData, this.taskDetail];
-        }
-        localStorage.setItem('task-data', JSON.stringify(localData));
+      if (this.$route.path.includes('/edit-task')) {
+        this.updateData(this.$route.params.id, this.taskDetail);
       } else {
-        localStorage.setItem('task-data', JSON.stringify(this.taskData));
+        this.postData(this.taskDetail);
       }
+    },
+    setEditFields(id) {
+      this.getData(id);
+    },
+
+    async getData(id) {
+      try {
+        const res = await axios.get(`http://localhost:8000/tasks/${id}`);
+        console.log(res.data);
+        if (res.status === 200) {
+          this.taskDetail = res.data[0];
+        }
+      } catch (err) {
+        console.error(err.message);
+      }
+    },
+
+    async postData(formData) {
+      try {
+        const config = {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        };
+        const body = JSON.stringify(formData);
+        const res = await axios.post(
+          'http://localhost:8000/tasks',
+          body,
+          config
+        );
+
+        if (res.status === 201) {
+          this.formReset();
+        }
+      } catch (err) {
+        console.error(err.message);
+      }
+    },
+
+    formReset() {
       this.blank = false;
       this.submitted = true;
       this.taskDetail.module = '';
@@ -94,14 +119,26 @@ export default {
         this.$router.push('/');
       }, 3000);
     },
-    setEditFields(id) {
-      const localData = JSON.parse(localStorage.getItem('task-data'));
-      localData.map((ldata) => {
-        if (ldata.id === Number(id)) {
-          this.taskDetail = ldata;
+    async updateData(id, formData) {
+      try {
+        const config = {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        };
+        const body = JSON.stringify(formData);
+        const res = await axios.put(
+          `http://localhost:8000/tasks/${id}`,
+          body,
+          config
+        );
+        console.log(res);
+        if (res.status === 200) {
+          this.formReset();
         }
-        return this.taskDetail;
-      });
+      } catch (err) {
+        console.log(err.message);
+      }
     },
   },
 

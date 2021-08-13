@@ -13,6 +13,10 @@ export default {
   data() {
     return {};
   },
+
+  provide: {
+    user: 'John',
+  },
 };
 </script>
 

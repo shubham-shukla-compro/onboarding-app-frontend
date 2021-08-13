@@ -28,13 +28,14 @@
 }
 
 .add-task-btn {
-  width: 30%;
+  width: 40%;
   display: block;
   padding: 14px 20px;
   margin: 35px auto;
   cursor: pointer;
   border: none;
   border-radius: 30px;
+  font-size: 1.2rem;
 }
 
 .add-task-btn:hover {
