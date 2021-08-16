@@ -4,6 +4,10 @@
   max-width: 900px;
 }
 
+.all-tasks-container .title {
+  margin-bottom: 0px;
+}
+
 .all-tasks-section {
   background-color: var(--white-color);
   width: 100%;

@@ -1,6 +1,6 @@
 <template>
   <div class="all-tasks-container">
-    <h1 class="title">OnBoarding Tasks</h1>
+    <h1 class="title">{{ title }}</h1>
     <div class="all-tasks-section">
       <router-link to="/add-task">
         <button class="all-tasks-section-btn">
@@ -19,11 +19,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="(task, index) in tasksData"
-            :key="index"
-            :class="{ disabledStyle: task.finished }"
-          >
+          <tr v-for="task in tasksData" :key="task.id" v-show="!task.finished">
             <td>
               <input
                 type="checkbox"
@@ -42,11 +38,12 @@
               >
                 <i class="fas fa-edit"></i>
               </router-link>
-              <button class="all-task-delete-btn" @click="onDelete(index)">
+              <button class="all-task-delete-btn" @click="onDelete(task.id)">
                 <i class="fas fa-trash"></i>
               </button>
             </td>
           </tr>
+          <!-- completed -->
           <tr v-show="checkedTasks.length">
             <th colspan="5">Completed Tasks</th>
           </tr>
@@ -81,9 +78,12 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
+      title: 'OnBoarding Tasks',
       tasksData: [],
       checkedTasks: [],
     };
@@ -97,31 +97,76 @@ export default {
         }
         return tdata;
       });
-      localStorage.setItem('task-data', JSON.stringify(this.tasksData));
+      this.updateData(task);
       return this.tasksData;
     },
     onDelete(index) {
-      this.tasksData = this.tasksData.filter((tdata) => {
-        return tdata.id != index;
-      });
       this.checkedTasks = this.checkedTasks.filter((ctask) => {
-        return ctask.id != index;
+        return ctask.id !== index;
       });
-      localStorage.setItem('task-data', JSON.stringify(this.tasksData));
+      this.tasksData = this.tasksData.filter((tdata) => {
+        return tdata.id !== index;
+      });
+      this.deleteData(index);
+    },
+
+    async getAllData() {
+      try {
+        const res = await axios.get('http://localhost:8000/tasks');
+        if (res.status === 200) {
+          const localData = res.data;
+          if (localData) {
+            this.tasksData = localData;
+            localData.map((ldata) => {
+              if (ldata.finished) {
+                this.checkedTasks.push(ldata);
+              }
+              return this.checkedTasks;
+            });
+          }
+        }
+        // console.log(res.data);
+        return this.tasksData;
+      } catch (err) {
+        console.error(err.message);
+      }
+    },
+
+    async updateData(task) {
+      try {
+        const config = {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        };
+        const body = JSON.stringify(task);
+        const res = await axios.put(
+          `http://localhost:8000/tasks/${task.id}`,
+          body,
+          config
+        );
+        if (res.status !== 200) {
+          console.log(res);
+        }
+      } catch (err) {
+        console.log(err.message);
+      }
+    },
+
+    async deleteData(id) {
+      try {
+        const res = await axios.delete(`http://localhost:8000/tasks/${id}`);
+        if (res.status === 200) {
+          // this.getAllData();
+        }
+      } catch (err) {
+        console.error(err.message);
+      }
     },
   },
 
   created() {
-    const localData = JSON.parse(localStorage.getItem('task-data'));
-    if (localData) {
-      this.tasksData = localData;
-      localData.map((ldata) => {
-        if (ldata.finished) {
-          this.checkedTasks.push(ldata);
-        }
-        return this.checkedTasks;
-      });
-    }
+    this.getAllData();
   },
 };
 </script>
